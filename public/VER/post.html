@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Post</title>
+        <link rel="stylesheet" href="./assets/site.css" />
+        <link rel="manifest" href="./manifest.json" />
+        
+        <style>
+            #r {
+                font-size: 15px;
+                text-align: center;
+            }
+
+            h1 {
+                text-align: center;
+                color: purple;
+            }
+
+            .nav-div {
+                height: 10vh;
+                background-color: gainsboro;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                column-gap: 200px;
+            }
+
+            a {
+                text-decoration: none;
+                color: purple;
+            }
+
+            a:hover {
+                color: white;
+            }
+
+            #btnRecord {
+                border: none;
+                border-radius: 20px;
+                width: 150px;
+                height: 40px;
+                color: purple;
+            }
+
+            #btnRecord:hover {
+                cursor: pointer;
+                background-color: grey;
+            }
+
+            #btnUpload {
+                border: none;
+                border-radius: 20px;
+                width: 150px;
+                height: 40px;
+                color: purple;
+            }
+
+            #btnUpload:hover {
+                cursor: pointer;
+                background-color: grey;
+            }
+
+            #beforeSnap div {
+                display: flex;
+                justify-content: center;
+            }
+
+            #afterSnap div {
+                display: flex;
+                justify-content: center;
+                column-gap: 50px;
+                margin-top: 30px;
+            }
+
+            #btnSnap {
+                border: none;
+                border-radius: 20px;
+                width: 150px;
+                height: 40px;
+                color: purple;
+            }
+
+            #btnSnap:hover {
+                cursor: pointer;
+                background-color: grey;
+            }
+
+            #stopDiv {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+    
+        </style>
+    </head>
+    
+    <body>
+        <div class="nav-div">
+            <div class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+            </div>
+            <div class="nav-item">
+              <a class="nav-link active" aria-current="page" href="post.html">New Post</a>
+            </div>
+          </div>
+
+        <div id="snapPhoto">
+            <h1>Post video:</h1>
+            <div id="beforeSnap">
+                <div id="recordDiv">
+                    <button id="btnRecord">
+                    Start recording
+                    </button>
+                </div>
+                <p id="r"></p>
+                <div>
+                    <video id="player" width="40%" autoplay></video>
+                </div>           
+            </div>
+
+            <div id="stopDiv"></div>
+
+            <div id="afterSnap">
+                <div><input id="snapName" type="text"/>
+                <button id="btnUpload">
+                    Upload
+                </button></div>
+            </div>
+        </div>
+
+        <script type="module" src="post.js"></script>
+    </body>
+</html>

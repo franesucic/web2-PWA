@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>My PWA</title>
+        <link rel="stylesheet" href="./assets/site.css" />
+        <link rel="manifest" href="./manifest.json" />
+
+        <style>
+            .h {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .h2 {
+                border-top: 1px solid black;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 30px;
+                padding-bottom: 30px;
+                padding-left: 200px;
+                padding-right: 200px;
+            }
+
+            h1 {
+                text-align: center;
+                color: purple;
+            }
+
+            .nav-div {
+                height: 10vh;
+                background-color: gainsboro;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                column-gap: 200px;
+            }
+
+            a {
+                text-decoration: none;
+                color: purple;
+            }
+
+            a:hover {
+                color: white;
+            }
+
+            #btnEnableNotifications {
+                border: none;
+                border-radius: 20px;
+                height: 50px;
+                width: 100px;
+                color: purple;
+            }
+
+            #btnEnableNotifications:hover {
+                cursor: pointer;
+                background-color: white;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="nav-div">
+            <div class="nav-item">
+              <a aria-current="page" href="index.html">Home</a>
+            </div>
+            <div class="nav-item">
+              <a aria-current="page" href="post.html">New Post</a>
+            </div>
+            <div class="text-end">
+                <button id="btnEnableNotifications">
+                    <i>Turn notifications on</i>
+                </button>
+            </div>
+          </div>
+
+        <h1>My content</h1>
+
+        <div id="snaps" class="h">
+            <template id="snapTemplate">
+                <div class="h2">
+                    <video width="400" controls>
+                        <source src="tbd" type="video/webm">
+                        Your browser does not support HTML video.
+                    </video>
+                    <div><h3>title</h3></div>
+                </div>
+            </template>
+        </div>
+
+        <script>
+            navigator.serviceWorker
+                .register("./sw.js", { type: "module" })
+                .then((reg) => console.log("Service Worker registered succesfully.", reg))
+                .catch((err) => console.error("Error while registering service worker.", err));
+
+            fetch("/snaps")
+                .then((res) => {
+                    if(res.ok) {
+                        res.json().then((data) => {
+                            data.files.forEach((fileName) => {
+                                console.log("appending", fileName);
+                                let snapsDiv = document.querySelector("#snaps");
+                                let template = document.querySelector("#snapTemplate");
+                                var clone = template.content.cloneNode(true);
+                                let source = clone.querySelector("source");
+                                source.src = "/uploads/" + fileName;
+                                let title = clone.querySelector("h3");
+                                title.textContent = fileName.substring(24).replaceAll("_", " ").replaceAll(".webm", "");
+                                snapsDiv.appendChild(clone);
+                            });
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        </script>
+
+        <script src="push.js"></script>
+    </body>
+</html>
