@@ -3,11 +3,11 @@ let btnNotif = document.getElementById("btnEnableNotifications");
 if("Notification" in window && "serviceWorker" in navigator) {
     btnNotif.addEventListener("click", function() {
         Notification.requestPermission(async function(res) {
-            console.log("Requested permission:", res);
+            console.log("Request permission result:", res);
             if(res === "granted") {
                 await setupPushSubscription();
             } else {
-                console.log("Push notifications denied:", res);
+                console.log("User denied push notifs:", res);
             }
         });
     });
@@ -34,14 +34,12 @@ async function setupPushSubscription() {
     try {
         let reg = await navigator.serviceWorker.ready;
         let sub = await reg.pushManager.getSubscription();
-        
         if(sub === null) {
             var publicKey = "BFQ64VeSgGRHwvCxGDPMC__apaVMlEL7Ne0gf2xTCJj3oQHgHaCAjHtXDsNVc_YK_5fivGdl4X5ykHIUIZRzXHA";
             sub = await reg.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array(publicKey)
             });
-
             let res = await fetch("/saveSubscription", {
                 method: "POST",
                 headers: {

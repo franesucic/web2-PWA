@@ -9,12 +9,7 @@
         <link rel="manifest" href="./manifest.json" />
 
         <style>
-            .h {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .h2 {
+            .post-div {
                 border-top: 1px solid black;
                 display: flex;
                 justify-content: space-between;
@@ -66,7 +61,7 @@
     <body>
         <div class="nav-div">
             <div class="nav-item">
-              <a aria-current="page" href="index.html">Home</a>
+              <a aria-current="page" href="index.html">Content</a>
             </div>
             <div class="nav-item">
               <a aria-current="page" href="post.html">New Post</a>
@@ -78,16 +73,18 @@
             </div>
           </div>
 
-        <h1>My content</h1>
+        <h1>All Posts</h1>
 
-        <div id="snaps" class="h">
+        <div id="snaps">
             <template id="snapTemplate">
-                <div class="h2">
-                    <video width="400" controls>
+                <div class="post-div">
+                    <video width="350" controls>
                         <source src="tbd" type="video/webm">
-                        Your browser does not support HTML video.
+                        Media not supported.
                     </video>
-                    <div><h3>title</h3></div>
+                    <div>
+                        <h3>title</h3>
+                    </div>
                 </div>
             </template>
         </div>
@@ -100,8 +97,10 @@
 
             fetch("/snaps")
                 .then((res) => {
+                    console.log("res", res);
                     if(res.ok) {
                         res.json().then((data) => {
+                            console.log("data", data);
                             data.files.forEach((fileName) => {
                                 console.log("appending", fileName);
                                 let snapsDiv = document.querySelector("#snaps");

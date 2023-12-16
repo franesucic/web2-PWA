@@ -89,10 +89,9 @@ async function sendPushNotifications(snapTitle) {
     webpush.setVapidDetails('mailto:fs53216@fer.hr', 
     'BFQ64VeSgGRHwvCxGDPMC__apaVMlEL7Ne0gf2xTCJj3oQHgHaCAjHtXDsNVc_YK_5fivGdl4X5ykHIUIZRzXHA', 
     'qUmaDTYh-s9AtoKPgVazhUfUMNo7HK7WvlSt9E1A9vI');
-
     subscriptions.forEach(async sub => {
         try {
-            console.log("Sending notification to: ", sub);
+            console.log("Sending notif to: ", sub);
             await webpush.sendNotification(sub, JSON.stringify({
                 title: 'New snap!',
                 body: 'Somebody just snaped a new photo: ' + snapTitle,
@@ -103,6 +102,11 @@ async function sendPushNotifications(snapTitle) {
         }
     });
 }
+
+app.listen(httpPort, function () {
+    console.log(`HTTP listening on port: ${httpPort}`);
+});
+/*
 
 const host = 'localhost';
 
@@ -118,4 +122,4 @@ if(externalUrl) {
     app.listen(port, host, () => {
         console.log(`Server running at http://${host}:${port}/`);
     });
-}
+}*/

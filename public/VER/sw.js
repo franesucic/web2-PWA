@@ -1,8 +1,8 @@
 import { del, entries } from "./idb-keyval.js";
 
 const filesToCache = [
-    "/",
     "manifest.json",
+    "/",
     "index.html",
     "offline.html",
     "404.html"
@@ -20,7 +20,9 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
+    console.log("**************************************");
     console.log("**   Activating new service worker... **");
+    console.log("**************************************");
     const cacheWhitelist = [staticCacheName];
 
     event.waitUntil(
@@ -51,9 +53,7 @@ self.addEventListener("fetch", (event) => {
                     }
 
                     return caches.open(staticCacheName).then((cache) => {
-                        console.log(event.request.url);
                         cache.put(event.request.url, response.clone());
-                        
                         return response;
                     });
                 });
@@ -67,7 +67,6 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("sync", function(event) {
     console.log("Background sync!", event);
-
     if(event.tag === "sync-snaps") {
         event.waitUntil(syncSnaps());
     }
@@ -78,12 +77,10 @@ let syncSnaps = async function() {
         entries.forEach((entry) => {
             let snap = entry[1];
             let formData = new FormData();
-
             formData.append("id", snap.id);
             formData.append("ts", snap.ts);
             formData.append("title", snap.title);
             formData.append("image", snap.video, snap.id + ".webm");
-
             fetch("/saveSnap", {
                 method: "POST",
                 body: formData
@@ -108,7 +105,6 @@ let syncSnaps = async function() {
 self.addEventListener("notificationclick", function(event) {
     let notification = event.notification;
     console.log("notification", notification);
-
     event.waitUntil(
         clients.matchAll().then(function(clis) {
             clis.forEach((client) => {
