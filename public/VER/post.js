@@ -45,18 +45,18 @@ let videoCapture = function() {
             try {
                 mediaRecorder = new MediaRecorder(stream, {mimeType : "video/webm"});
             } catch(e) {
-                console.error('Error while creating MediaRecorder: ' + e);
+                console.log('Error while creating MediaRecorder: ' + e);
                 return;
             }
             
             myRecorder = mediaRecorder;
             console.log('MediaRecorder created succesfully.');
-            mediaRecorder.ondataavailable = recorderOnDataAvailable;
+            mediaRecorder.ondataavailable = dataAvailable;
             mediaRecorder.start(100);
         })
 }
 
-function recorderOnDataAvailable(event) {
+function dataAvailable(event) {
     if(event.data.size == 0) return;
     allRecorded.push(event.data);
 }
@@ -99,10 +99,10 @@ function addNewRecord() {
     title.innerHTML = "";
     let recordButton = document.createElement("button");
     recordButton.id = "btnRecord";
-    let s = document.createElement("span");
-    s.innerHTML = " Start recording";
+    let span = document.createElement("span");
+    span.innerHTML = " Start recording";
     beforeSnap.insertBefore(recordButton, title);
-    recordButton.appendChild(s);
+    recordButton.appendChild(span);
     recordButton.addEventListener("click", function(event) {
         addNewSnap();
         videoCapture();

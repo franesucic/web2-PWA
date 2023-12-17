@@ -106,20 +106,3 @@ async function sendPushNotifications(snapTitle) {
 app.listen(httpPort, function () {
     console.log(`HTTP listening on port: ${httpPort}`);
 });
-/*
-
-const host = 'localhost';
-
-const externalUrl = process.env.RENDER_EXTERNAL_URL;
-const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 3000;
-
-if(externalUrl) {
-    const hostname = '127.0.0.1';
-    app.listen(port, hostname, () => {
-        console.log(`Server locally running at http://${hostname}:${port}/ and from outside on ${externalUrl}`);
-    });
-} else {
-    app.listen(port, host, () => {
-        console.log(`Server running at http://${host}:${port}/`);
-    });
-}*/
