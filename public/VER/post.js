@@ -110,7 +110,7 @@ document.getElementById("btnUpload").addEventListener("click", function(event) {
             .then((res) => res.blob())
             .then((blob) => {
                 let ts = new Date().toISOString();
-                let id = ts + snapName.value.replace(/\s/g, "_"); // ws->_
+                let id = ts + snapName.value.replace(/\s/g, "_"); 
 
                 set(id, {
                     id,
