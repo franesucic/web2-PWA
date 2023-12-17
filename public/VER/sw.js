@@ -5,7 +5,8 @@ const filesToCache = [
     "/",
     "index.html",
     "offline.html",
-    "404.html"
+    "404.html",
+    "/assets/site.css"
 ];
 
 const staticCacheName = "static-cache-v2";

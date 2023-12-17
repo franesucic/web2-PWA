@@ -2,7 +2,7 @@ import { set } from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm";
 
 let mediaRecorder;
 let myStream;
-var myRecorder;
+let myRecorder;
 let allRecorded = [];
 let url;
 
