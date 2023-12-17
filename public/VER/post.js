@@ -1,113 +1,99 @@
-import { get, set } from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm";
+import { set } from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm";
 
-var mediaRecorder;
-var myStream;
+let mediaRecorder;
+let myStream;
 var myRecorder;
-var allRecorded = [];
-var url;
+let allRecorded = [];
+let url;
 
-let player = document.getElementById("player");
-let beforeSnap = document.getElementById("beforeSnap");
-let snapName = document.getElementById("snapName");
+const player = document.getElementById("player");
+const beforeSnap = document.getElementById("beforeSnap");
+const snapName = document.getElementById("snapName");
+const recordTitle = document.getElementById("recordTitle");
 
-let startCapture = function() {
-    if(!("mediaDevices" in navigator)) {
-    } else {
-        navigator.mediaDevices
-            .getUserMedia({ video: true, audio: false })
-            .then((stream) => {
-                player.srcObject = stream;
-            })
-            .catch((err) => {
-                alert("Media stream not working.");
-                console.log(err);
-            });
+const startCapture = async () => {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        player.srcObject = stream;
+    } catch (err) {
+        alert("Media stream not working.");
+        console.error(err);
     }
 };
 
 startCapture();
 
-let videoCapture = function() {
-    navigator.mediaDevices
-        .getUserMedia({video: true, audio: true})
-        .then(function(stream) {
-            var video = document.querySelector('video');
-            
-            if('srcObject' in video) {
-                video.srcObject = stream;
-            } else if(navigator.mozGetUserMedia) {
-                video.mozSrcObject = stream;
-            } else {
-                video.src = (window.URL || window.webkitURL).createObjectURL(stream);
-            }
+const videoCapture = () => {
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+            const video = document.querySelector('video');
+            video.srcObject = 'srcObject' in video ? stream : (video.mozSrcObject = stream);
             myStream = stream;
             try {
-                mediaRecorder = new MediaRecorder(stream, {mimeType : "video/webm"});
-            } catch(e) {
-                console.log('Error while creating MediaRecorder: ' + e);
+                mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+            } catch (e) {
+                console.error('Error while creating MediaRecorder: ' + e);
                 return;
             }
-            
             myRecorder = mediaRecorder;
-            console.log('MediaRecorder created succesfully.');
+            console.log('MediaRecorder created successfully.');
             mediaRecorder.ondataavailable = dataAvailable;
             mediaRecorder.start(100);
         })
-}
+        .catch((err) => {
+            console.error('Error accessing video stream: ' + err);
+        });
+};
 
-function dataAvailable(event) {
-    if(event.data.size == 0) return;
-    allRecorded.push(event.data);
-}
+const dataAvailable = (event) => {
+    if (event.data.size > 0) {
+        allRecorded.push(event.data);
+    }
+};
 
-function stopRecording() {
+const stopRecording = () => {
     myRecorder.stop();
     console.log('Recording stopped');
     myStream.getTracks()[0].stop();
-    var blob = new Blob(allRecorded, {type: "video/webm"});
+    const blob = new Blob(allRecorded, { type: "video/webm" });
     url = (window.URL || window.webkitURL).createObjectURL(blob);
+};
 
-}
-
-document.getElementById("btnRecord").addEventListener("click", function(event) {
+document.getElementById("btnRecord").addEventListener("click", () => {
     addNewSnap();
     videoCapture();
 });
 
-function addNewSnap() {
-    document.getElementById("recordTitle").innerHTML = "Recording...";
-    document.getElementById("btnRecord").remove();
-    let stopDiv = document.getElementById("stopDiv");
-    let stopButton = document.createElement("button");
+const addNewSnap = () => {
+    recordTitle.innerHTML = "Recording...";
+    const btnRecord = document.getElementById("btnRecord");
+    btnRecord.remove();
+    const stopDiv = document.getElementById("stopDiv");
+    const stopButton = document.createElement("button");
     stopButton.id = "btnSnap";
-    let span = document.createElement("span");
-    span.innerHTML = " Stop"
-    beforeSnap.appendChild(stopButton);
-    stopButton.appendChild(span);
-    stopButton.addEventListener("click", function(event) {
+    stopButton.innerHTML = '<span> Stop</span>';
+    stopButton.addEventListener("click", () => {
         stopRecording();
-        document.getElementById("recordTitle").innerHTML = "Recording stopped"
+        recordTitle.innerHTML = "Recording stopped";
     });
+    beforeSnap.appendChild(stopButton);
     stopDiv.appendChild(stopButton);
-}
+};
 
-function addNewRecord() {
-    document.getElementById("btnSnap").remove();
-    let recordDiv = document.getElementById("recordDiv");
-    let title = document.getElementById("recordTitle");
-    title.innerHTML = "";
-    let recordButton = document.createElement("button");
+const addNewRecord = () => {
+    const btnSnap = document.getElementById("btnSnap");
+    btnSnap.remove();
+    const recordDiv = document.getElementById("recordDiv");
+    const recordButton = document.createElement("button");
     recordButton.id = "btnRecord";
-    let span = document.createElement("span");
-    span.innerHTML = " Start recording";
-    beforeSnap.insertBefore(recordButton, title);
-    recordButton.appendChild(span);
-    recordButton.addEventListener("click", function(event) {
+    recordButton.innerHTML = '<span> Start recording</span>';
+    recordButton.addEventListener("click", () => {
         addNewSnap();
         videoCapture();
     });
+    beforeSnap.insertBefore(recordButton, recordTitle);
     recordDiv.appendChild(recordButton);
-}
+};
 
 document.getElementById("btnUpload").addEventListener("click", function(event) {
     event.preventDefault();
@@ -116,6 +102,8 @@ document.getElementById("btnUpload").addEventListener("click", function(event) {
         alert("You need to type something.");
         return false;
     }
+
+    recordTitle.innerText = "Video uploaded."
 
     if("serviceWorker" in navigator && "SyncManager" in window) {
         fetch(url)

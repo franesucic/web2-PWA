@@ -1,8 +1,5 @@
-Primjeri se pokreću s:
-  * npm run ver01
-  * npm run ver02
-  * ...
-  * npm run ver06
+Primjer se pokreće s:
+  * npm run serve
 
 
 VAPID ključevi se generiraju s:
