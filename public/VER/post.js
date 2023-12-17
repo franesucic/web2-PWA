@@ -8,7 +8,6 @@ var url;
 
 let player = document.getElementById("player");
 let beforeSnap = document.getElementById("beforeSnap");
-let afterSnap = document.getElementById("afterSnap");
 let snapName = document.getElementById("snapName");
 
 let startCapture = function() {
